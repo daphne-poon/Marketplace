@@ -39,50 +39,30 @@
             card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvLocation"
+            android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="Hong Kong"
-            card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintLeft_toRightOf="@+id/ivLocation" />
-
-        <ImageView
-            android:id="@+id/ivLocation"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_location_on_black_24dp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/tvLocation"
+            android:text="They're red."
             card_view:layout_constraintStart_toStartOf="@+id/tvPrice"
-            card_view:layout_constraintTop_toTopOf="@+id/tvLocation" />
-
-        <TextView
-            android:id="@+id/tvUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="daphnep"
-            card_view:layout_constraintBottom_toTopOf="@id/ivLocation"
-            card_view:layout_constraintLeft_toRightOf="@+id/ivUser" />
-
-        <ImageView
-            android:id="@+id/ivUser"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_person_black_24dp"
-            card_view:layout_constraintStart_toStartOf="@+id/ivLocation"
-            card_view:layout_constraintBottom_toBottomOf="@+id/tvUser"
-            card_view:layout_constraintTop_toTopOf="@+id/tvUser"
-            />
+            card_view:layout_constraintTop_toBottomOf="@+id/tvPrice" />
 
         <ImageView
             android:id="@+id/ivPhoto"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Listing"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintStart_toStartOf="@+id/tvTitle"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

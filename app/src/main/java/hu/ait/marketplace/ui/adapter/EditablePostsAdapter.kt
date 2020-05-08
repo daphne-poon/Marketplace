@@ -11,7 +11,7 @@ import hu.ait.marketplace.R
 import hu.ait.marketplace.ui.data.Post
 import kotlinx.android.synthetic.main.post_row.view.*
 
-class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolder> {
 
     lateinit var context: Context
     var postsList = mutableListOf<Post>()

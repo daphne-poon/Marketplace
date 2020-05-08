@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Marketplace</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_dashboard">Messages</string>
+    <string name="title_notifications">Profile</string>
     <string name="title_sell">Sell</string>
+    <string name="what_are_you_selling_required">What are you selling? (required)</string>
+    <string name="describe_it_required">Describe it! (required)</string>
+    <string name="price_required">Price (required)</string>
+    <string name="attach_photo_required">Attach Photo (required)</string>
+    <string name="send">Send</string>
 </resources>
