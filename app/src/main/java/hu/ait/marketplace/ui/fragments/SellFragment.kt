@@ -166,6 +166,7 @@ class SellFragment : Fragment() {
 //        beginTransaction().
 //        replace(R.id.container, NewFragment.newInstance()).commitNow()
 //    }
+
     @Throws(Exception::class)
     private fun uploadPostWithImage() {
 

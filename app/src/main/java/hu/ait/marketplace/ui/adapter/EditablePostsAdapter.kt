@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import hu.ait.marketplace.R
 import hu.ait.marketplace.ui.data.Post
-import kotlinx.android.synthetic.main.post_row.view.*
+import kotlinx.android.synthetic.main.post_row_editable.view.*
 
 class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolder> {
 
@@ -42,8 +42,11 @@ class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolde
 
         holder.tvTitle.text = post.title
         holder.tvPrice.text = post.price
-        holder.tvUser.text = post.author
-        holder.tvLocation.text = post.location
+        holder.tvDescription.text = post.body
+
+        holder.btnDelete.setOnClickListener {
+            removePost(holder.adapterPosition)
+        }
 
         if (post.imgUrl.isNotEmpty()) {
             holder.ivPhoto.visibility = View.VISIBLE
@@ -87,8 +90,8 @@ class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolde
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tvTitle = itemView.tvTitle
         var tvPrice = itemView.tvPrice
-        var tvLocation = itemView.tvLocation
-        var tvUser = itemView.tvUser
+        var tvDescription = itemView.tvDescription
+        var btnDelete = itemView.btnDelete
         var ivPhoto = itemView.ivPhoto
     }
 }

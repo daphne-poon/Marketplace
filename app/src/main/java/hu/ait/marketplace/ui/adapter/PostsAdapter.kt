@@ -59,21 +59,6 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
         notifyDataSetChanged()
     }
 
-
-    // when i press the delete button
-    private fun removePost(index: Int) {
-        // postKeys[index] gives u the key for a given post
-        FirebaseFirestore.getInstance().collection("posts").document(
-            postKeys[index]
-        ).delete()
-
-        postsList.removeAt(index)
-        postKeys.removeAt(index)
-
-        // notify recycler view
-        notifyItemRemoved(index)
-    }
-
     fun removePostByKey(key: String) {
         var index = postKeys.indexOf(key)
         // -1 is not found index

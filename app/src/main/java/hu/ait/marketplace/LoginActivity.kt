@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import hu.ait.marketplace.ui.data.User
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -40,28 +42,51 @@ class LoginActivity : AppCompatActivity() {
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
             etEmail.text.toString(), etPassword.text.toString()
-        ).addOnSuccessListener {
-            Toast.makeText(this@LoginActivity,
-                "Registration Successful",
-                Toast.LENGTH_LONG).show()
-        }.addOnFailureListener{
+        ).addOnFailureListener{
             Toast.makeText(this@LoginActivity,
                 "Error: ${it.message}",
                 Toast.LENGTH_LONG).show()
         }
+
+        registerUserInFirestore()
     }
 
     fun isFormValid(): Boolean {
         return when {
             etEmail.text.isEmpty() -> {
-                etEmail.error = "This field can not be empty"
+                etEmail.error = "Email can not be empty"
                 false
             }
             etPassword.text.isEmpty() -> {
-                etPassword.error = "The password can not be empty"
+                etPassword.error = "Password can not be empty"
                 false
             }
             else -> true
+        }
+    }
+
+    fun registerUserInFirestore() {
+
+        var usersCollection = FirebaseFirestore.getInstance().collection(
+            "users"
+        )
+
+        val user = User(
+            FirebaseAuth.getInstance().currentUser!!.uid,
+            FirebaseAuth.getInstance().currentUser!!.email!!,
+            "Hong Kong",
+            "https://www.thepeakid.com/wp-content/uploads/2016/03/default-profile-picture.jpg",
+            java.util.Calendar.getInstance().toString()
+        )
+
+        usersCollection.add(user).addOnSuccessListener {
+            Toast.makeText(this@LoginActivity,
+                "Registration Successful",
+                Toast.LENGTH_LONG).show()
+        }.addOnFailureListener {
+            Toast.makeText(
+                this@LoginActivity,
+                "Error ${it.message}", Toast.LENGTH_LONG).show()
         }
     }
 
