@@ -30,7 +30,8 @@
             android:layout_marginLeft="8dp"
             android:gravity="center_vertical"
             android:text="Hong Kong"
-            android:textSize="18dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/ivLocation"
             app:layout_constraintTop_toTopOf="@+id/ivLocation" />
 
@@ -51,7 +52,8 @@
             android:layout_marginLeft="8dp"
             android:gravity="center_vertical"
             android:text="daphnep"
-            android:textSize="18dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/ivUser"
             app:layout_constraintLeft_toRightOf="@+id/ivUser" />
 
@@ -59,6 +61,8 @@
             android:id="@+id/ivUser"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_person_black_24dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -92,7 +96,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
         android:text="Your Listings"
         android:textAlignment="center"
