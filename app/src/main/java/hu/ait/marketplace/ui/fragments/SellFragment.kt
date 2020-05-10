@@ -31,8 +31,8 @@ import java.util.*
 class SellFragment : Fragment() {
 
     companion object {
-        private const val PERMISSION_REQUEST_CODE = 1001
-        private const val CAMERA_REQUEST_CODE = 1002
+        const val PERMISSION_REQUEST_CODE = 1001
+        const val CAMERA_REQUEST_CODE = 1002
     }
 
     var uploadBitmap : Bitmap? = null

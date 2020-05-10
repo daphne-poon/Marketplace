@@ -36,19 +36,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun registerClick(v: View){
-        if (!isFormValid()){
-            return
-        }
-
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-            etEmail.text.toString(), etPassword.text.toString()
-        ).addOnFailureListener{
-            Toast.makeText(this@LoginActivity,
-                "Error: ${it.message}",
-                Toast.LENGTH_LONG).show()
-        }
-
-        registerUserInFirestore()
+        startActivity(Intent(this, RegisterActivity::class.java))
+        finish()
     }
 
     fun isFormValid(): Boolean {
@@ -62,31 +51,6 @@ class LoginActivity : AppCompatActivity() {
                 false
             }
             else -> true
-        }
-    }
-
-    fun registerUserInFirestore() {
-
-        var usersCollection = FirebaseFirestore.getInstance().collection(
-            "users"
-        )
-
-        val user = User(
-            FirebaseAuth.getInstance().currentUser!!.uid,
-            FirebaseAuth.getInstance().currentUser!!.email!!,
-            "Hong Kong",
-            "https://www.thepeakid.com/wp-content/uploads/2016/03/default-profile-picture.jpg",
-            java.util.Calendar.getInstance().toString()
-        )
-
-        usersCollection.add(user).addOnSuccessListener {
-            Toast.makeText(this@LoginActivity,
-                "Registration Successful",
-                Toast.LENGTH_LONG).show()
-        }.addOnFailureListener {
-            Toast.makeText(
-                this@LoginActivity,
-                "Error ${it.message}", Toast.LENGTH_LONG).show()
         }
     }
 
