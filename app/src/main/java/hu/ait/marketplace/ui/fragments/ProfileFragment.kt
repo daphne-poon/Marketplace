@@ -16,7 +16,11 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 
 class ProfileFragment : Fragment() {
 
-    lateinit var user: User
+    companion object {
+        const val defaultProfPic = "https://www.thepeakid.com/wp-content/uploads/2016/03/default-profile-picture.jpg"
+    }
+
+    private var user = User()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +40,10 @@ class ProfileFragment : Fragment() {
             Glide.with(activity!!.applicationContext).
             load(user.profPicUrl).
             into(root.ivProfPic)
+        } else {
+            Glide.with(activity!!.applicationContext).
+            load(defaultProfPic).
+            into(root.ivProfPic)
         }
 
         root.tvUser.text = user.username
@@ -44,12 +52,14 @@ class ProfileFragment : Fragment() {
 
     fun getUserInfo(root: View) {
         val db = FirebaseFirestore.getInstance()
-        val uid = FirebaseAuth.getInstance().currentUser!!.email!!
-        val query = db.collection("users").whereEqualTo("author", uid)
+        val email = FirebaseAuth.getInstance().currentUser!!.email!!
+        val query = db.collection("users").whereEqualTo("author", email)
 
         query.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                user = task.result!!.documents[0].toObject(User::class.java)!!
+                for (document in task.result!!) {
+                    user = document.toObject(User::class.java)
+                }
                 addInfoToUI(root)
             } else {
                 Toast.makeText(activity!!.applicationContext, "Error: ${task.exception}", Toast.LENGTH_LONG).show()

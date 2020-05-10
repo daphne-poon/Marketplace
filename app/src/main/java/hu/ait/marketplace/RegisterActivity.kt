@@ -19,8 +19,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import hu.ait.marketplace.ui.data.User
+import hu.ait.marketplace.ui.fragments.ProfileFragment
 import hu.ait.marketplace.ui.fragments.SellFragment
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.activity_register.etEmail
+import kotlinx.android.synthetic.main.activity_register.etPassword
 import kotlinx.android.synthetic.main.fragment_sell.*
 import java.io.ByteArrayOutputStream
 import java.net.URLEncoder
@@ -29,7 +33,6 @@ import java.util.*
 class RegisterActivity : AppCompatActivity() {
 
     var uploadBitmap : Bitmap? = null
-    val defaultProfPic = "https://www.thepeakid.com/wp-content/uploads/2016/03/default-profile-picture.jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +54,24 @@ class RegisterActivity : AppCompatActivity() {
 
         registerUserInAuth()
 
-        if (uploadBitmap != null) {
-            try {
-                addUserWithImage()
-            } catch (e : java.lang.Exception) {
-                e.printStackTrace()
-            }
-        } else {
-            registerUserInFirestore()
-        }
+        loginIn()
 
+    }
+
+    private fun loginIn() {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(
+            etEmail.text.toString(), etPassword.text.toString()
+        ).addOnSuccessListener {
+            if (uploadBitmap != null) {
+                try {
+                    addUserWithImage()
+                } catch (e : java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            } else {
+                registerUserInFirestore()
+            }
+        }
     }
 
     private fun registerUserInAuth() {
@@ -75,7 +86,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    fun registerUserInFirestore(imageUrl: String = defaultProfPic) {
+    fun registerUserInFirestore(imageUrl: String = "") {
 
         var usersCollection = FirebaseFirestore.getInstance().collection(
             "users"
