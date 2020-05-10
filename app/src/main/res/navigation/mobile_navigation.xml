@@ -23,9 +23,4 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
-    <fragment
-        android:id="@+id/navigation_messages"
-        android:name="hu.ait.marketplace.ui.fragments.MessagesFragment"
-        android:label="@string/title_messages"
-        tools:layout="@layout/fragment_messages" />
 </navigation>

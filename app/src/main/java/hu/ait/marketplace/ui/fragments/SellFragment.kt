@@ -59,7 +59,7 @@ class SellFragment : Fragment() {
         root.btnSend.setOnClickListener {
             sendClick()
         }
-
+        retainInstance = true
         requestNeededPermission()
         return root
     }

@@ -1,6 +1,7 @@
 package hu.ait.marketplace.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,42 +18,40 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 class HomeFragment : Fragment() {
 
     private lateinit var postsAdapter: PostsAdapter
-    private var myLocation : String = "Your City"
-    private var currentLocation = "Hong Kong"
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        postsAdapter = PostsAdapter(activity!!.getApplicationContext(),
-        FirebaseAuth.getInstance().currentUser!!.uid)
-
+        postsAdapter = PostsAdapter(activity!!.getApplicationContext())
+        retainInstance = true
         root.recyclerPosts.adapter = postsAdapter
-        setMyLocation()
-        root.tvCity.text = "Browse Listings In ${myLocation}"
-        initPosts()
-
-        return root
-    }
-
-    private fun setMyLocation() {
         var uid = FirebaseAuth.getInstance().currentUser!!.uid
         val query = FirebaseFirestore.getInstance()
-            .collection("users").whereEqualTo("uid", uid)
+            .collection(getString(R.string.users)).whereEqualTo(getString(R.string.uid), uid)
 
         query.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (document in task.result!!) {
-                     myLocation = document.toObject(User::class.java).location
+                    var myLocation = document.toObject(User::class.java).location
+                    root.tvCity.text = "Browse Listings In ${myLocation}"
+                    setMyLocation(myLocation)
                 }
             }
         }
+
+        return root
     }
 
-    fun initPosts() {
+    private fun setMyLocation(myCity: String) {
+        Log.i("location in SetMyLoc: ", myCity)
+        initPosts(myCity)
+    }
+
+    fun initPosts(myCity : String) {
         val db = FirebaseFirestore.getInstance()
         val query = db.collection("posts")
 
@@ -68,22 +67,20 @@ class HomeFragment : Fragment() {
 
                     for (docChange in querySnapshot?.getDocumentChanges()!!) {
                         val post = docChange.document.toObject(Post::class.java)
-                        var user = User()
-                        val db = FirebaseFirestore.getInstance()
-                        val query = db.collection("users").whereEqualTo("uid", post.authorid)
                         query.get().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
+                                var currentLocation = ""
                                 for (document in task.result!!) {
-                                    user = document.toObject(User::class.java)
-                                    updateCurrentLocation(user)
+                                    currentLocation = post.location
                                 }
-                                if (currentLocation == myLocation) {
+                                if (currentLocation == myCity) {
                                     if (docChange.type == DocumentChange.Type.ADDED) {
                                         postsAdapter.addPost(post, docChange.document.id)
                                     } else if (docChange.type == DocumentChange.Type.REMOVED) {
                                         postsAdapter.removePostByKey(docChange.document.id)
                                     }
                                 }
+
                             }
                         }
 
@@ -92,9 +89,5 @@ class HomeFragment : Fragment() {
                 }
             }
         )
-    }
-
-    private fun updateCurrentLocation(user: User) {
-        currentLocation = user.location
     }
 }

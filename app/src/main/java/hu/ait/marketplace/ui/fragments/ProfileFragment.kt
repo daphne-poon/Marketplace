@@ -37,6 +37,7 @@ class ProfileFragment : Fragment() {
         postsAdapter = EditablePostsAdapter(activity!!.applicationContext,
             FirebaseAuth.getInstance().currentUser!!.uid)
 
+        retainInstance = true
         root.recyclerPosts.adapter = postsAdapter
 
         initPosts()

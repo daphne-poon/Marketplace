@@ -9,4 +9,6 @@
     <string name="price_required">Price (required)</string>
     <string name="attach_photo_required">Attach Photo (required)</string>
     <string name="send">Send</string>
+    <string name="users">users</string>
+    <string name="uid">uid</string>
 </resources>
