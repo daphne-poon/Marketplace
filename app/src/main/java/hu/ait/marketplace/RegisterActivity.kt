@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +40,6 @@ class RegisterActivity : AppCompatActivity() {
                 Intent(MediaStore.ACTION_IMAGE_CAPTURE), SellFragment.CAMERA_REQUEST_CODE
             )
         }
-        requestNeededPermission()
 
     }
 

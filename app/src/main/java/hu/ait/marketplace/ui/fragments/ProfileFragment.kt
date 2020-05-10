@@ -1,110 +1,91 @@
 package hu.ait.marketplace.ui.fragments
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.firestore.*
 import hu.ait.marketplace.R
 import hu.ait.marketplace.ui.data.User
-import java.io.ByteArrayOutputStream
-import java.net.URLEncoder
-import java.util.*
+import kotlinx.android.synthetic.main.fragment_profile.view.*
 
 
 class ProfileFragment : Fragment() {
 
-    lateinit var db : FirebaseFirestore
-    var uploadBitmap : Bitmap? = null
+    lateinit var user: User
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
 
+        getUserInfo(root)
         return root
     }
 
-    fun registerUserInFirestore(imageUrl: String = "") {
+    private fun addInfoToUI(root: View) {
 
-        var usersCollection = FirebaseFirestore.getInstance().collection(
-            "users"
-        )
-
-        val user = User(
-            "224235","daphne",
-            "Hong Kong", "ee", "1111111"
-        )
-
-        usersCollection.add(user).addOnSuccessListener {
-            Toast.makeText(
-                activity,
-                "Info Updated", Toast.LENGTH_LONG).show()
-        }.addOnFailureListener {
-            Toast.makeText(
-                activity,
-                "Error ${it.message}", Toast.LENGTH_LONG).show()
+        if (user.profPicUrl.isNotEmpty()) {
+            Glide.with(activity!!.applicationContext).
+            load(user.profPicUrl).
+            into(root.ivProfPic)
         }
+
+        root.tvUser.text = user.username
+        root.tvLocation.text = user.location
     }
 
-//    fun getPhotoUrl() {
-//
-//        // Get current username
-//        var user = FirebaseAuth.getInstance().currentUser
-//
-//
-//            if (user != null) {
-//                db.collection("users")
-//                    .document(user.uid).set({
-//
-//                        email: user.email,
-//
-//                        someotherproperty: ‘some user preference’
-//
-//                    })
-//
-//            }
-//        }
+    fun getUserInfo(root: View) {
+        val db = FirebaseFirestore.getInstance()
+        val uid = FirebaseAuth.getInstance().currentUser!!.email!!
+        val query = db.collection("users").whereEqualTo("author", uid)
 
-//        var storage = firebase.storage();
-//// Create a Storage Ref w/ username
-//        var storageRef = FirebaseStorage.ref(user + '/profilePicture/' + file.name);
-//
-//// Upload file
-//        var task = storageRef.put(file);
-
-    @Throws(Exception::class)
-    private fun uploadPostWithImage() {
-
-        val baos = ByteArrayOutputStream()
-        uploadBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-
-        val imageInBytes = baos.toByteArray()
-
-        val storageRef = FirebaseStorage.getInstance().getReference()
-        val newImage = URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8") + ".jpg"
-        val newImagesRef = storageRef.child("images/$newImage")
-
-        newImagesRef.putBytes(imageInBytes)
-            .addOnFailureListener {
-                Toast.makeText(activity!!.applicationContext, it.message, Toast.LENGTH_SHORT).show()
-            }.addOnSuccessListener {
-                newImagesRef.downloadUrl.addOnCompleteListener(object: OnCompleteListener<Uri> {
-                    override fun onComplete(task: Task<Uri>) {
-                        registerUserInFirestore(task.result.toString())
-                    }
-                })
+        query.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                user = task.result!!.documents[0].toObject(User::class.java)!!
+                addInfoToUI(root)
+            } else {
+                Toast.makeText(activity!!.applicationContext, "Error: ${task.exception}", Toast.LENGTH_LONG).show()
             }
+        }
+
     }
-    }
+
+//    fun initPosts() {
+//        val db = FirebaseFirestore.getInstance()
+//        val query = db.collection("posts")
+//
+//        query.addSnapshotListener(
+//            object : EventListener<QuerySnapshot> {
+//
+//                override fun onEvent(querySnapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
+//                    if (e!=null) {
+//                        Toast.makeText(activity!!.getApplicationContext(), "Error: ${e.message}",
+//                            Toast.LENGTH_LONG).show()
+//                        return
+//                    }
+//
+//                    for (docChange in querySnapshot?.getDocumentChanges()!!) {
+//                        if (docChange.type == DocumentChange.Type.ADDED) {
+//                            val post = docChange.document.toObject(Post::class.java)
+//                            EditablePostsAdapter.addPost(post, docChange.document.id)
+//                        } else if (docChange.type == DocumentChange.Type.REMOVED) {
+//                            EditablePostsAdapter.removePostByKey(docChange.document.id)
+//                        } else if (docChange.type == DocumentChange.Type.MODIFIED) {
+//
+//                        }
+//                    }
+//
+//                }
+//            }
+//        )
+//    }
+
+}
