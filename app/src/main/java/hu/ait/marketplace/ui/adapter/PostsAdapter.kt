@@ -1,6 +1,7 @@
 package hu.ait.marketplace.ui.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import hu.ait.marketplace.R
 import hu.ait.marketplace.ui.data.Post
+import hu.ait.marketplace.ui.data.User
 import kotlinx.android.synthetic.main.post_row.view.*
 
 class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
@@ -36,14 +38,26 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
         return postsList.size
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var post = postsList.get(holder.adapterPosition)
+        var post = postsList[holder.adapterPosition]
+        var user = User()
+
+        val query = FirebaseFirestore.getInstance()
+            .collection("users").whereEqualTo("uid", post.authorid)
+
+        query.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                for (document in task.result!!) {
+                    user = document.toObject(User::class.java)
+                }
+                holder.tvUser.text = user.username
+            } else {
+                Log.i("USER_ID", "idk why it doesnt work")
+            }
+        }
 
         holder.tvTitle.text = post.title
-        holder.tvPrice.text = post.price
-        holder.tvUser.text = post.author
-        holder.tvLocation.text = post.location
+        holder.tvPrice.text = "$${post.price}"
 
         if (post.imgUrl.isNotEmpty()) {
             holder.ivPhoto.visibility = View.VISIBLE
@@ -52,6 +66,9 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
             holder.ivPhoto.visibility = View.GONE
         }
     }
+
+
+
 
     fun addPost(post: Post, key: String) {
         postsList.add(post)
@@ -72,7 +89,6 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tvTitle = itemView.tvTitle
         var tvPrice = itemView.tvPrice
-        var tvLocation = itemView.tvLocation
         var tvUser = itemView.tvUser
         var ivPhoto = itemView.ivPhoto
     }

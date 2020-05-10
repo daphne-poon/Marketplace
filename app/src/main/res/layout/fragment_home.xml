@@ -8,14 +8,15 @@
     tools:context=".ui.fragments.HomeFragment">
 
     <TextView
+        android:id="@+id/tvCity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_horizontal"
+        android:text="Browse Listings In Your City"
         android:textAlignment="center"
-        android:text="Browse Listings Near You"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        android:gravity="center_horizontal" />
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerPosts"

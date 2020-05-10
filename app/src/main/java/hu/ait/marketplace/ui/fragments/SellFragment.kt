@@ -21,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import hu.ait.marketplace.R
 import hu.ait.marketplace.ui.data.Post
+import hu.ait.marketplace.ui.data.User
+import hu.ait.marketplace.ui.data.getUserFromEmail
 import kotlinx.android.synthetic.main.fragment_sell.*
 import kotlinx.android.synthetic.main.fragment_sell.view.*
 import kotlinx.android.synthetic.main.post_row.*
@@ -36,6 +38,7 @@ class SellFragment : Fragment() {
     }
 
     var uploadBitmap : Bitmap? = null
+    var myLocation : String = ""
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -44,6 +47,8 @@ class SellFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_sell, container, false)
+
+        setMyLocation()
 
         root.btnAttach.setOnClickListener {
             startActivityForResult(
@@ -86,12 +91,12 @@ class SellFragment : Fragment() {
     }
 
     fun uploadPost(imageUrl: String = "") {
+
         val post = Post(
             FirebaseAuth.getInstance().currentUser!!.uid,
-            FirebaseAuth.getInstance().currentUser!!.email!!,
             etTitle.text.toString(),
             etPrice.text.toString(),
-            "Hong Kong",
+            myLocation,
             etBody.text.toString(),
             imageUrl
         )
@@ -105,6 +110,7 @@ class SellFragment : Fragment() {
                 activity,
                 "Post Saved", Toast.LENGTH_LONG).show()
             clearPost()
+//            backHome()
         }.addOnFailureListener {
             Toast.makeText(
                 activity,
@@ -160,12 +166,13 @@ class SellFragment : Fragment() {
         }
     }
 
-//    fun backHome(){
-//        activity!!.
-//        supportFragmentManager.
-//        beginTransaction().
-//        replace(R.id.container, NewFragment.newInstance()).commitNow()
-//    }
+    fun backHome(){
+
+        var fragmentTrans = activity!!.supportFragmentManager.beginTransaction()
+
+        fragmentTrans.replace(R.id.container, HomeFragment(), tag)
+        fragmentTrans.commit()
+    }
 
     @Throws(Exception::class)
     private fun uploadPostWithImage() {
@@ -190,5 +197,19 @@ class SellFragment : Fragment() {
                     }
                 })
             }
+    }
+
+    private fun setMyLocation() {
+        var uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val query = FirebaseFirestore.getInstance()
+            .collection("users").whereEqualTo("uid", uid)
+
+        query.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                for (document in task.result!!) {
+                    myLocation = document.toObject(User::class.java).location
+                }
+            }
+        }
     }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp">
 
@@ -10,44 +12,74 @@
         android:id="@+id/etTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:hint="@string/what_are_you_selling_required"
-        android:maxLines="1" />
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/etBody"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="@string/describe_it_required"
         android:inputType="textMultiLine"
         android:maxLines="10"
-        android:scrollHorizontally="false" />
+        android:scrollHorizontally="false"
+        app:layout_constraintEnd_toEndOf="@+id/etTitle"
+        app:layout_constraintStart_toStartOf="@+id/etTitle"
+        app:layout_constraintTop_toBottomOf="@+id/etTitle" />
 
     <EditText
         android:id="@+id/etPrice"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="@string/price_required"
         android:inputType="textMultiLine"
         android:maxLines="10"
-        android:scrollHorizontally="false" />
-
-    <ImageView
-        android:id="@+id/imgAttach"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:visibility="gone"/>
+        android:scrollHorizontally="false"
+        app:layout_constraintEnd_toEndOf="@+id/etTitle"
+        app:layout_constraintStart_toStartOf="@+id/etTitle"
+        app:layout_constraintTop_toBottomOf="@+id/etBody" />
 
     <Button
         android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/send"/>
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/send"
+        app:layout_constraintBottom_toBottomOf="@+id/btnAttach"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnAttach" />
 
     <Button
         android:id="@+id/btnAttach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/attach_photo_required"/>
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/attach_photo_required"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPrice" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/imgAttach"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAttach" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

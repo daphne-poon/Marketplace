@@ -12,17 +12,15 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
-            <AutoCompleteTextView
-                android:id="@+id/tvLocation"
-                android:hint="Where are you?"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvLocation"
+            android:hint="Current City"
+            android:textSize="18dp"
+            android:paddingLeft="3dp"
+            android:paddingBottom="4dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

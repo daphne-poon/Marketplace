@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import hu.ait.marketplace.R
+import hu.ait.marketplace.ui.adapter.EditablePostsAdapter
+import hu.ait.marketplace.ui.data.Post
 import hu.ait.marketplace.ui.data.User
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 
@@ -21,6 +23,7 @@ class ProfileFragment : Fragment() {
     }
 
     private var user = User()
+    private lateinit var postsAdapter: EditablePostsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,9 +32,46 @@ class ProfileFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
-
         getUserInfo(root)
+
+        postsAdapter = EditablePostsAdapter(activity!!.applicationContext,
+            FirebaseAuth.getInstance().currentUser!!.uid)
+
+        root.recyclerPosts.adapter = postsAdapter
+
+        initPosts()
+
         return root
+    }
+
+    private fun initPosts() {
+        val db = FirebaseFirestore.getInstance()
+        val query = db.collection("posts")
+
+        query.addSnapshotListener(
+            object : EventListener<QuerySnapshot> {
+
+                override fun onEvent(querySnapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
+                    if (e!=null) {
+                        Toast.makeText(activity!!.getApplicationContext(), "Error: ${e.message}",
+                            Toast.LENGTH_LONG).show()
+                        return
+                    }
+
+                    for (docChange in querySnapshot?.getDocumentChanges()!!) {
+
+                        if (docChange.type == DocumentChange.Type.ADDED) {
+                            val post =
+                                docChange.getDocument().toObject(Post::class.java)
+                            if (post.authorid == FirebaseAuth.getInstance().currentUser!!.uid) {
+                                postsAdapter.addPost(post, docChange.document.id)
+                            }
+                        }
+                    }
+
+                }
+            }
+        )
     }
 
     private fun addInfoToUI(root: View) {
@@ -51,10 +91,10 @@ class ProfileFragment : Fragment() {
     }
 
     fun getUserInfo(root: View) {
+
         val db = FirebaseFirestore.getInstance()
         val email = FirebaseAuth.getInstance().currentUser!!.email!!
-        val query = db.collection("users").whereEqualTo("author", email)
-
+        val query = db.collection("users").whereEqualTo("email", email)
         query.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (document in task.result!!) {

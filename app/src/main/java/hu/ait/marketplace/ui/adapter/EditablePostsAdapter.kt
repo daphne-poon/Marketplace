@@ -26,7 +26,7 @@ class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolde
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(
-            R.layout.post_row, parent, false
+            R.layout.post_row_editable, parent, false
         )
 
         return ViewHolder(view)
@@ -41,7 +41,7 @@ class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolde
         var post = postsList.get(holder.adapterPosition)
 
         holder.tvTitle.text = post.title
-        holder.tvPrice.text = post.price
+        holder.tvPrice.text = "$${post.price}"
         holder.tvDescription.text = post.body
 
         holder.btnDelete.setOnClickListener {
@@ -62,8 +62,6 @@ class EditablePostsAdapter : RecyclerView.Adapter<EditablePostsAdapter.ViewHolde
         notifyDataSetChanged()
     }
 
-
-    // when i press the delete button
     private fun removePost(index: Int) {
         // postKeys[index] gives u the key for a given post
         FirebaseFirestore.getInstance().collection("posts").document(
